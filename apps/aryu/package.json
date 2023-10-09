@@ -1,0 +1,20 @@
+{
+  "name": "aryu",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "bin": {
+    "aryu": "./bin/aryu"
+  },
+  "scripts": {},
+  "keywords": [],
+  "author": "AryloYeung <arylo.open@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@aryu/tsconfig": "^0.0.0",
+    "eslint": "^8.51.0",
+    "eslint-config-aryu": "^0.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}

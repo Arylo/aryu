@@ -1,0 +1,13 @@
+{
+  "name": "eslint-config-aryu",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "keywords": [],
+  "author": "AryloYeung <arylo.open@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "eslint-config-tencent": "^1.0.4"
+  }
+}

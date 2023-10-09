@@ -1,0 +1,6 @@
+{
+  "extends": "@aryu/tsconfig/tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+  }
+}
