@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
-  "private": true,
   "keywords": [],
   "author": "AryloYeung <arylo.open@gmail.com>",
   "license": "MIT",

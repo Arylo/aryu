@@ -1,8 +1,10 @@
 {
   "extends": [
-    "./tsconfig.json",
     "@aryu/tsconfig/tsconfig.prod",
   ],
+  "compilerOptions": {
+    "outDir": "dist",
+  },
   "exclude": [
     "dist/**",
     "test/**",

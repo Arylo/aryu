@@ -1,1 +1,3 @@
-import './index'
+import fn from './index'
+
+fn()

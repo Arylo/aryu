@@ -1,3 +1,5 @@
 export * from './findUp'
 export * from './parseCommands'
 export * from './logger'
+export * from './getProjectPath'
+export * from './getStaticPath'

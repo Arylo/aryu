@@ -1,16 +1,17 @@
 import fs from 'fs'
 import path from 'path'
 import { findUp, genLogger } from '../../utils'
+import { STATIC_DIR } from './constant'
 
-export const COMMAND = ['init']
-
-const STATIC_DIR = path.resolve(__dirname, `../../../static/${COMMAND[0]}`)
+export { COMMAND } from './constant'
 
 export const execute = () => {
   const projectRoot = findUp(['package.json', '.git'])
-  if (!projectRoot) return
-
-  const logger = genLogger(projectRoot)
+  const logger = genLogger(projectRoot ?? process.cwd())
+  if (!projectRoot) {
+    logger.error('Project root not found.')
+    process.exit(1)
+  }
 
   fs.readdirSync(STATIC_DIR)
     .forEach((filename) => {
@@ -23,4 +24,14 @@ export const execute = () => {
         logger.info(`File "${filename}" created.`)
       }
     })
+
+  const pkgContent = fs.readFileSync(path.resolve(projectRoot, 'package.json'), { encoding: 'utf-8' })
+  const pkg = JSON.parse(pkgContent)
+  pkg.workspaces ??= [
+    "apps/*",
+    "packages/*"
+  ]
+  const space = pkgContent.match(/\n(\s+)"/)?.[1].length ?? 2
+  fs.writeFileSync(path.resolve(projectRoot, 'package.json'), `${JSON.stringify(pkg, null, space)}\n`)
+  logger.info('File "package.json" updated.')
 }

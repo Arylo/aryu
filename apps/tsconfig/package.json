@@ -1,5 +1,10 @@
 {
   "name": "@aryu/tsconfig",
   "version": "0.0.0",
-  "license": "MIT"
+  "author": "AryloYeung <arylo.open@gmail.com>",
+  "license": "MIT",
+  "files": [
+    "tsconfig.json",
+    "tsconfig.prod.json"
+  ]
 }

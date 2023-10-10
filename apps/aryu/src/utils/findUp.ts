@@ -1,8 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-export function findUp(targets: string[]) {
-  const cwd = process.cwd()
+export function findUp(targets: string[], { cwd = process.cwd() } = {}) {
   const { root } = path.parse(cwd)
   const paths: string[] = [cwd]
 

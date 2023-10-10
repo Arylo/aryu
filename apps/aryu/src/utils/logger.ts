@@ -9,5 +9,11 @@ export function genLogger(cwd?: string) {
     info(...args: any[]) {
       console.info(`${curCwd} >`, ...args)
     },
+    warn(...args: any[]) {
+      console.warn(`${curCwd} >`, ...args)
+    },
+    error(...args: any[]) {
+      console.error(`${curCwd} >`, ...args)
+    },
   }
 }

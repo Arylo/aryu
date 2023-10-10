@@ -1,4 +1,4 @@
-export const COMMAND = ['test']
+export { COMMAND } from "./constant"
 
 export const execute = () => {
 }
