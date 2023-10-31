@@ -1,7 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { exec, genLogger, getProjectPath, getRootProjectPath } from "../../../utils"
-
+import { defineCommandObject, exec, genLogger, getProjectPath, getRootProjectPath } from "../../../utils"
 
 const getTscPath = () => {
   const projectRootDir = getRootProjectPath()
@@ -34,11 +33,15 @@ const genTscArgs = () => {
   return args
 }
 
-export const execute = (argv: any[] = []) => {
-  const projectRoot = getProjectPath()
-  const logger = genLogger(projectRoot)
+export default defineCommandObject({
+  description: 'Build source code using tsc',
+  execute: (argv: any[] = []) => {
+    const projectRoot = getProjectPath()
+    const logger = genLogger(projectRoot)
 
-  const command = `${getTscPath()} ${genTscArgs().join(' ')} ${argv.join(' ')}`
-  logger.command(command)
-  exec(command, { stdio: 'inherit', cwd: projectRoot })
-}
+    const command = `${getTscPath()} ${genTscArgs().join(' ')} ${argv.join(' ')}`
+    logger.command(command)
+    exec(command, { stdio: 'inherit', cwd: projectRoot })
+  }
+})
+

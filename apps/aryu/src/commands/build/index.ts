@@ -1,17 +1,16 @@
 import fs from 'fs'
 import path from 'path'
-import { getProjectPath, runTurboCmd } from "../../utils"
-import { execute as tsc } from './tsc'
-import { COMMAND } from './constant'
+import { defineCommandObject, getProjectPath } from "../../utils"
+import tscCmd from './tsc'
 
-export { COMMAND } from './constant'
+export default defineCommandObject({
+  description: 'Build source code',
+  execute: (argv: any[] = []) => {
+    const projectRoot = getProjectPath()
 
-export const execute = (argv: any[] = []) => {
-  runTurboCmd(COMMAND[0], argv)
-  const projectRoot = getProjectPath()
-
-  const tsIndexPath = path.resolve(projectRoot, 'src/index.ts')
-  if (fs.existsSync(tsIndexPath)) {
-    return tsc(argv)
+    const tsIndexPath = path.resolve(projectRoot, 'src/index.ts')
+    if (fs.existsSync(tsIndexPath)) {
+      return tscCmd.execute(argv.slice(1))
+    }
   }
-}
+})

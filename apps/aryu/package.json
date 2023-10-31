@@ -6,6 +6,11 @@
   "bin": {
     "aryu": "./bin/aryu"
   },
+  "files": [
+    "dist",
+    "bin",
+    "static"
+  ],
   "scripts": {
     "build": "tsc -p ./tsconfig.prod.json",
     "lint": "eslint"
@@ -18,9 +23,15 @@
     "@typescript-eslint/eslint-plugin": "5.12",
     "@typescript-eslint/parser": "5.12",
     "chalk": "^4.1.2",
+    "cli-table": "^0.3.11",
     "eslint": "^8.51.0",
     "eslint-config-aryu": "^0.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/cli-table": "^0.3.3",
+    "@vitest/coverage-v8": "^0.34.6",
+    "tester": "^0.0.0"
   }
 }

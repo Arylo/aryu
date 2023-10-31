@@ -1,8 +1,5 @@
-import { runTurboCmd } from "../../utils"
-import { COMMAND } from "./constant"
+import { defineCommandObject } from "../../utils"
 
-export { COMMAND } from "./constant"
-
-export const execute = (argv: string[] = []) => {
-  runTurboCmd(COMMAND[0], argv)
-}
+export default defineCommandObject({
+  execute: () => {},
+})

@@ -1,9 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import { exec, genLogger, getProjectPath, runTurboCmd } from '../../utils'
-import { COMMAND, STATIC_DIR } from './constant'
-
-export { COMMAND } from './constant'
+import { defineCommandObject, exec, genLogger, getProjectPath } from '../../utils'
+import { STATIC_DIR } from './constant'
 
 const LINT_SETTING_CONFIG = path.resolve(STATIC_DIR, '.eslintrc')
 const LINT_SETTING_IGNORE = path.resolve(STATIC_DIR, '.eslintignore')
@@ -21,23 +19,29 @@ const genLintArgs = () => [
   '--ext=.ts',
 ]
 
-export const execute = (argv: string[] = []) => {
-  runTurboCmd(COMMAND[0], argv)
-
-  const projectRoot = getProjectPath()
-
-  const logger = genLogger();
+export const handler = (projectPath: string, argv: string[] = []) => {
+  const logger = genLogger(projectPath);
 
   ([
-    ['config', path.resolve(projectRoot, '.eslintrc')],
-    ['ignore', path.resolve(projectRoot, '.eslintignore')],
+    ['config', path.resolve(projectPath, '.eslintrc')],
+    ['ignore', path.resolve(projectPath, '.eslintignore')],
   ] as [keyof typeof settingPathMap, string][])
     .forEach(([target, p]) => fs.existsSync(p) && (settingPathMap[target] = p))
 
-  const command = `${lintCmd} ${[...genLintArgs(), projectRoot, ...argv].join(' ')}`
-  logger.command(command
+  const realCommand = `${lintCmd} ${[...genLintArgs(), projectPath, ...argv].join(' ')}`
+  const logCommand = realCommand
     .replace(LINT_SETTING_CONFIG, '@aryu/eslint/.eslintrc')
-    .replace(LINT_SETTING_IGNORE, '@aryu/eslint/.eslintignore'))
+    .replace(LINT_SETTING_IGNORE, '@aryu/eslint/.eslintignore')
+  logger.command(logCommand)
 
-  exec(command)
+  exec(realCommand)
 }
+
+export default defineCommandObject({
+  description: 'Code standard using eslint',
+  execute: (argv: string[] = []) => {
+    const projectRoot = getProjectPath()
+    return handler(projectRoot, argv)
+  }
+})
+

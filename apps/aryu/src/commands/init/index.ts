@@ -1,11 +1,9 @@
 import fs from 'fs'
 import path from 'path'
-import { genLogger, getProjectPath } from '../../utils'
+import { defineCommandObject, genLogger, getProjectPath } from '../../utils'
 import { STATIC_DIR } from './constant'
 import { getRootProjectPath } from '../../utils/getRootProjectPath'
 import { updatePkg } from './utils'
-
-export { COMMAND } from './constant'
 
 const copyFiles = (sourceDir: string, targetDir: string) => {
   const logger = genLogger(targetDir)
@@ -31,9 +29,9 @@ const copyFiles = (sourceDir: string, targetDir: string) => {
     })
 }
 
-export const execute = () => {
-  const projectRootDir = getRootProjectPath()
-  const projectDir = getProjectPath()
+export const handler = (cwd: string) => {
+  const projectRootDir = getRootProjectPath({ cwd })
+  const projectDir = getProjectPath({ cwd })
 
   if (projectDir !== projectRootDir) {
     copyFiles(path.resolve(STATIC_DIR, 'package'), projectDir)
@@ -49,3 +47,11 @@ export const execute = () => {
     })
   }
 }
+
+export default defineCommandObject({
+  description: 'Project folder initialize',
+  execute: () => {
+    return handler(process.cwd())
+  },
+})
+
