@@ -1,7 +1,16 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig",
   "compilerOptions": {
     "declarationMap": false,
     "sourceMap": false,
-  }
+  },
+  "exclude": [
+    "dist/**",
+    "test/**",
+    "bin/**",
+    "etc/**",
+    "**/*.spec.ts",
+    "**/*.e2e.ts",
+    "**/*.test.ts"
+  ]
 }

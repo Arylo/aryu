@@ -3,12 +3,16 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "turbo build",
+    "lint": "turbo lint"
+  },
   "keywords": [],
   "author": "AryloYeung <arylo.open@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.18.39",
+    "eslint-config-aryu": "^0.0.0",
     "turbo": "^1.10.15"
   },
   "workspaces": [

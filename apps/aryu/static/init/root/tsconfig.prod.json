@@ -1,0 +1,5 @@
+{
+  "extends": [
+    "@aryu/tsconfig/tsconfig.prod",
+  ],
+}

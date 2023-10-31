@@ -1,15 +1,16 @@
 import { findUp } from "./findUp"
 import { genLogger } from "./logger"
 
-let p: string | undefined
+let p: string
 
-export const getProjectPath = () => {
+export function getProjectPath (options: { noExit: true }): string | undefined
+export function getProjectPath (options?: { noExit: boolean }): string
+export function getProjectPath ({ noExit = false } = {}) {
   if (!p) {
-    p = findUp(['package.json'])
+    p = findUp(['package.json']) as string
   }
-  if (!p) {
-    genLogger().error('No project root found.')
-    process.exit(1)
+  if (!p && !noExit) {
+    genLogger().exit('No project root found.')
   }
   return p
 }

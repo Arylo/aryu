@@ -1,37 +1,51 @@
 import fs from 'fs'
 import path from 'path'
-import { findUp, genLogger } from '../../utils'
+import { genLogger, getProjectPath } from '../../utils'
 import { STATIC_DIR } from './constant'
+import { getRootProjectPath } from '../../utils/getRootProjectPath'
+import { updatePkg } from './utils'
 
 export { COMMAND } from './constant'
 
-export const execute = () => {
-  const projectRoot = findUp(['package.json', '.git'])
-  const logger = genLogger(projectRoot ?? process.cwd())
-  if (!projectRoot) {
-    logger.error('Project root not found.')
-    process.exit(1)
-  }
+const copyFiles = (sourceDir: string, targetDir: string) => {
+  const logger = genLogger(targetDir)
 
-  fs.readdirSync(STATIC_DIR)
+  fs.readdirSync(sourceDir)
     .forEach((filename) => {
-      const rootStaticFilepath = path.resolve(projectRoot, filename)
-      const curStaticFilepath = path.resolve(STATIC_DIR, filename)
-      if (fs.existsSync(rootStaticFilepath)) {
-        logger.info(`File "${filename}" already exists.`)
-      } else {
-        fs.copyFileSync(curStaticFilepath, rootStaticFilepath)
-        logger.info(`File "${filename}" created.`)
+      const sourceStaticFilepath = path.resolve(sourceDir, filename)
+      const targetStaticFilepath = path.resolve(targetDir, filename)
+      const stat = fs.statSync(sourceStaticFilepath)
+      if (stat.isFile()) {
+        if (fs.existsSync(targetStaticFilepath)) {
+          logger.success(`File "${filename}" already exists.`)
+        } else {
+          fs.copyFileSync(sourceStaticFilepath, targetStaticFilepath)
+          logger.info(`File "${filename}" created.`)
+        }
+      } else if (stat.isDirectory()) {
+        if (!fs.existsSync(targetStaticFilepath)) {
+          fs.mkdirSync(targetStaticFilepath, { recursive: true })
+        }
+        copyFiles(sourceStaticFilepath, targetStaticFilepath)
       }
     })
+}
 
-  const pkgContent = fs.readFileSync(path.resolve(projectRoot, 'package.json'), { encoding: 'utf-8' })
-  const pkg = JSON.parse(pkgContent)
-  pkg.workspaces ??= [
-    "apps/*",
-    "packages/*"
-  ]
-  const space = pkgContent.match(/\n(\s+)"/)?.[1].length ?? 2
-  fs.writeFileSync(path.resolve(projectRoot, 'package.json'), `${JSON.stringify(pkg, null, space)}\n`)
-  logger.info('File "package.json" updated.')
+export const execute = () => {
+  const projectRootDir = getRootProjectPath()
+  const projectDir = getProjectPath()
+
+  if (projectDir !== projectRootDir) {
+    copyFiles(path.resolve(STATIC_DIR, 'package'), projectDir)
+  } else {
+    copyFiles(path.resolve(STATIC_DIR, 'root'), projectRootDir)
+
+    updatePkg(path.resolve(projectRootDir, 'package.json'), (obj) => {
+      obj.workspaces ??= [
+        "apps/*",
+        "packages/*"
+      ]
+      return obj
+    })
+  }
 }

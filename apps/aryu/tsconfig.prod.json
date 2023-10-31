@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "../../tsconfig.prod"
+  ],
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "declaration": false,
+    "declarationMap": false,
+  }
+}

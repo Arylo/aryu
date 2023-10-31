@@ -6,12 +6,18 @@
   "bin": {
     "aryu": "./bin/aryu"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "tsc -p ./tsconfig.prod.json",
+    "lint": "eslint"
+  },
   "keywords": [],
   "author": "AryloYeung <arylo.open@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@aryu/tsconfig": "^0.0.0",
+    "@typescript-eslint/eslint-plugin": "5.12",
+    "@typescript-eslint/parser": "5.12",
+    "chalk": "^4.1.2",
     "eslint": "^8.51.0",
     "eslint-config-aryu": "^0.0.0",
     "ts-node": "^10.9.1",

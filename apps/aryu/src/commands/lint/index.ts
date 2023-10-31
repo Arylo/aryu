@@ -1,8 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import { findUp, genLogger } from '../../utils'
-import { execSync } from 'child_process'
-import { STATIC_DIR } from './constant'
+import { exec, genLogger, getProjectPath, runTurboCmd } from '../../utils'
+import { COMMAND, STATIC_DIR } from './constant'
 
 export { COMMAND } from './constant'
 
@@ -23,14 +22,12 @@ const genLintArgs = () => [
 ]
 
 export const execute = (argv: string[] = []) => {
-  const projectRoot = findUp(['package.json'])
+  runTurboCmd(COMMAND[0], argv)
 
-  const logger = genLogger(projectRoot ?? process.cwd())
+  const projectRoot = getProjectPath()
 
-  if (!projectRoot) {
-    logger.info('No project root found.')
-    process.exit(1)
-  }
+  const logger = genLogger();
+
   ([
     ['config', path.resolve(projectRoot, '.eslintrc')],
     ['ignore', path.resolve(projectRoot, '.eslintignore')],
@@ -38,12 +35,9 @@ export const execute = (argv: string[] = []) => {
     .forEach(([target, p]) => fs.existsSync(p) && (settingPathMap[target] = p))
 
   const command = `${lintCmd} ${[...genLintArgs(), projectRoot, ...argv].join(' ')}`
-  logger.info(command
+  logger.command(command
     .replace(LINT_SETTING_CONFIG, '@aryu/eslint/.eslintrc')
     .replace(LINT_SETTING_IGNORE, '@aryu/eslint/.eslintignore'))
-  try {
-    execSync(command, { stdio: 'inherit' })
-  } catch (error: any) {
-    process.exit(error.status ?? 127)
-  }
+
+  exec(command)
 }
