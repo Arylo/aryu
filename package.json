@@ -15,6 +15,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.18.39",
+    "@vitest/coverage-v8": "^0.34.6",
     "eslint-config-aryu": "^0.0.0",
     "turbo": "^1.10.15",
     "vitest": "^0.34.6"
