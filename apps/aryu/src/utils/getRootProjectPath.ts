@@ -1,5 +1,5 @@
-import findUp from "./findUp"
-import { genLogger } from "./logger"
+import findUp from './findUp'
+import { genLogger } from './logger'
 
 export const getRootProjectPath = ({ cwd = process.cwd() } = {}) => {
   const p = findUp(['package.json', '.git'], { cwd }) as string

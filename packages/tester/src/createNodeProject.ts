@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { faker } from '@faker-js/faker'
 
-export function createNodeProject (cwd = process.cwd(), { includeGit = true } = {}) {
+export function createNodeProject(cwd = process.cwd(), { includeGit = true } = {}) {
   const projectName = faker.word.sample()
   const projectPath = path.resolve(cwd, projectName)
   fs.mkdirSync(projectPath, { recursive: true })

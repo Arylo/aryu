@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "turbo build",
-    "lint": "turbo lint",
+    "prelint": "npm run build",
+    "lint": "eslint --cache --ext=.ts --ext=.js .",
+    "pretest": "npm run build",
     "test": "vitest run --coverage"
   },
   "keywords": [],

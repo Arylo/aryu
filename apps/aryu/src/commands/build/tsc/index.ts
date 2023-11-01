@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { defineCommandObject, exec, genLogger, getProjectPath, getRootProjectPath } from "../../../utils"
+import { defineCommandObject, exec, genLogger, getProjectPath, getRootProjectPath } from '../../../utils'
 
 const getTscPath = () => {
   const projectRootDir = getRootProjectPath()
@@ -27,8 +27,8 @@ const genTscArgs = () => {
 
   const args = [
     `-p ${tsconfigPath}`,
-    `--rootDir ./src`,
-    `--outDir ./dist`,
+    '--rootDir ./src',
+    '--outDir ./dist',
   ]
   return args
 }
@@ -42,6 +42,6 @@ export default defineCommandObject({
     const command = `${getTscPath()} ${genTscArgs().join(' ')} ${argv.join(' ')}`
     logger.command(command)
     exec(command, { stdio: 'inherit', cwd: projectRoot })
-  }
+  },
 })
 

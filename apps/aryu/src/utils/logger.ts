@@ -34,7 +34,7 @@ export function genLogger(cwd?: string) {
     command(cmd: string) {
       console.info(`${logPrefix.info} ${curCwd}>`, cmd)
     },
-    exit(msg: string, code: number = 1) {
+    exit(msg: string, code = 1) {
       (code > 0 ? baseMethods.error : baseMethods.info)(msg)
       process.exit(code)
     },

@@ -1,4 +1,4 @@
-import { ExecSyncOptions, execSync } from "child_process"
+import { ExecSyncOptions, execSync } from 'child_process'
 
 export const exec = (command: string, options: ExecSyncOptions = {}) => {
   try {

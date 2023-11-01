@@ -12,8 +12,7 @@
     "static"
   ],
   "scripts": {
-    "build": "tsc -p ./tsconfig.prod.json",
-    "lint": "eslint"
+    "build": "tsc -p ./tsconfig.prod.json"
   },
   "keywords": [],
   "author": "AryloYeung <arylo.open@gmail.com>",

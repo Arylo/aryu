@@ -1,10 +1,10 @@
 import fs from 'fs'
 import path from 'path'
-import { afterAll, beforeEach, expect, test } from "vitest";
+import { afterAll, beforeEach, expect, test } from 'vitest'
 import { startNodeProject } from 'tester'
-import { handler } from '../init';
+import { handler } from '../init'
 
-let testProject = startNodeProject()
+const testProject = startNodeProject()
 
 beforeEach(() => {
   testProject.refresh()

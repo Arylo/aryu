@@ -9,7 +9,7 @@ export const runTurboCmd = (cmd: string, argv: string[] = []) => {
   if (!fs.existsSync(turboConfigPath)) return false
   const logger = genLogger(getProjectPath())
 
-  logger.info(`Found "turbo.json"`)
+  logger.info('Found "turbo.json"')
 
   let config: { pipeline: { [cmd: string]: any } } = { pipeline: {} }
   try {

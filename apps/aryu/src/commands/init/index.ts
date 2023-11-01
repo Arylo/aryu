@@ -39,19 +39,18 @@ export const handler = (cwd: string) => {
     copyFiles(path.resolve(STATIC_DIR, 'root'), projectRootDir)
 
     updatePkg(path.resolve(projectRootDir, 'package.json'), (obj) => {
-      obj.workspaces ??= [
-        "apps/*",
-        "packages/*"
+      const newObj = obj
+      newObj.workspaces ??= [
+        'apps/*',
+        'packages/*',
       ]
-      return obj
+      return newObj
     })
   }
 }
 
 export default defineCommandObject({
   description: 'Project folder initialize',
-  execute: () => {
-    return handler(process.cwd())
-  },
+  execute: () => handler(process.cwd()),
 })
 

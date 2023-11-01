@@ -8,7 +8,7 @@ export const updatePkg = <T extends Record<string, any>>(filepath: string, callb
   try {
     pkg = JSON.parse(pkgContent)
   } catch (error) {
-    logger.exit(`Parse "package.json" failed`)
+    logger.exit('Parse "package.json" failed')
   }
   const newPkg = callback(pkg)
   const spaceLength = pkgContent.match(/\n(\s+)"/)?.[1].length ?? 2

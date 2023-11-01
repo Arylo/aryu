@@ -1,4 +1,4 @@
-import { ICommandObj } from "./command"
+import { ICommandObj } from './command'
 
 interface IDefineCommandOptions {
   turbo: boolean;

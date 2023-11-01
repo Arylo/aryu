@@ -1,5 +1,4 @@
-import path from 'path'
-import { afterAll, beforeEach, expect, test } from "vitest"
+import { afterAll, beforeEach, expect, test } from 'vitest'
 import { startNodeProject } from 'tester'
 import { getRootProjectPath } from './getRootProjectPath'
 

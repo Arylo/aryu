@@ -42,6 +42,6 @@ export default defineCommandObject({
   execute: (argv: string[] = []) => {
     const projectRoot = getProjectPath()
     return handler(projectRoot, argv)
-  }
+  },
 })
 

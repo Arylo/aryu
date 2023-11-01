@@ -1,4 +1,4 @@
-import { defineCommandObject } from "../../utils"
+import { defineCommandObject } from '../../utils'
 
 export default defineCommandObject({
   execute: () => {},
