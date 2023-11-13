@@ -29,6 +29,46 @@ const copyFiles = (sourceDir: string, targetDir: string) => {
     })
 }
 
+export const initMethods = {
+  default(projectDir: string) {
+    const logger = genLogger(projectDir)
+
+    logger.info('Processing the default files initialization...')
+    copyFiles(path.resolve(STATIC_DIR, 'default'), projectDir)
+
+    updatePkg(projectDir, (obj) => {
+      const newObj = obj
+
+      newObj.scripts ??= {}
+      newObj.scripts.build ??= 'turbo build'
+      newObj.scripts.pretest ??= 'npm run build'
+      newObj.scripts.test ??= 'vitest run --coverage'
+      newObj.workspaces ??= [
+        'apps/*',
+        'packages/*',
+      ]
+      return newObj
+    })
+  },
+  test(projectDir: string) {
+    const logger = genLogger(projectDir)
+
+    logger.info('Processing the test files initialization...')
+    copyFiles(path.resolve(STATIC_DIR, 'test'), projectDir)
+
+    updatePkg(projectDir, (obj) => {
+      const newObj = obj
+
+      newObj.scripts ??= {}
+      if (newObj.scripts.build) {
+        newObj.scripts.pretest ??= 'npm run build'
+      }
+      newObj.scripts.test ??= 'vitest run --coverage'
+      return newObj
+    })
+  },
+}
+
 export const handler = (cwd: string) => {
   const projectRootDir = getRootProjectPath({ cwd })
   const projectDir = getProjectPath({ cwd })
@@ -36,16 +76,12 @@ export const handler = (cwd: string) => {
   if (projectDir !== projectRootDir) {
     copyFiles(path.resolve(STATIC_DIR, 'package'), projectDir)
   } else {
-    copyFiles(path.resolve(STATIC_DIR, 'root'), projectRootDir)
+    const logger = genLogger(projectRootDir)
 
-    updatePkg(path.resolve(projectRootDir, 'package.json'), (obj) => {
-      const newObj = obj
-      newObj.workspaces ??= [
-        'apps/*',
-        'packages/*',
-      ]
-      return newObj
-    })
+    logger.info('Found the root project path')
+
+    initMethods.default(projectRootDir)
+    initMethods.test(projectRootDir)
   }
 }
 

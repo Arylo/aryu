@@ -17,7 +17,6 @@ afterAll(() => {
 const expectRootPath = () => {
   const rootPath = testProject.getPath();
   [
-    '.nycrc',
     '.nvmrc',
     'turbo.json',
     'tsconfig.json',

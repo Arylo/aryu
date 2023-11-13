@@ -1,8 +1,10 @@
 import fs from 'fs'
+import path from 'path'
 import { genLogger } from '../../utils'
 
-export const updatePkg = <T extends Record<string, any>>(filepath: string, callback: (obj: T) => T) => {
-  const logger = genLogger()
+export const updatePkg = <T extends Record<string, any>>(projectPath: string, callback: (obj: T) => T) => {
+  const logger = genLogger(projectPath)
+  const filepath = path.resolve(projectPath, 'package.json')
   const pkgContent = fs.readFileSync(filepath, { encoding: 'utf-8' })
   let pkg: any
   try {
