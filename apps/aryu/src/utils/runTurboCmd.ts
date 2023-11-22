@@ -4,12 +4,20 @@ import { getProjectPath } from './getProjectPath'
 import { genLogger } from './logger'
 import { exec } from './exec'
 
-export const runTurboCmd = (cmd: string, argv: string[] = []) => {
-  const turboConfigPath = path.resolve(getProjectPath(), 'turbo.json')
-  if (!fs.existsSync(turboConfigPath)) return false
-  const logger = genLogger(getProjectPath())
+export const checkTurboFeature = (projectPath: string) => {
+  const logger = genLogger(projectPath)
+  const turboConfigPath = path.resolve(projectPath, 'turbo.json')
 
+  if (!fs.existsSync(turboConfigPath)) return false
   logger.info('Found "turbo.json"')
+  return turboConfigPath
+}
+
+export const runTurboCmd = (cmd: string, argv: string[] = []) => {
+  const projectPath = getProjectPath()
+  const turboConfigPath = checkTurboFeature(projectPath)
+  if (!turboConfigPath) return false
+  const logger = genLogger(projectPath)
 
   let config: { pipeline: { [cmd: string]: any } } = { pipeline: {} }
   try {

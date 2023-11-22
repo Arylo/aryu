@@ -1,16 +1,17 @@
 import fs from 'fs'
 import path from 'path'
+import lodash from 'lodash'
 import { faker } from '@faker-js/faker'
 
-export function createNodeProject(cwd = process.cwd(), { includeGit = true } = {}) {
-  const projectName = faker.word.sample()
-  const projectPath = path.resolve(cwd, projectName)
+export function createNodeProject(cwd = process.cwd(), { includeGit = true, projectName = faker.word.sample() } = {}) {
+  const validProjectName = lodash.kebabCase(projectName)
+  const projectPath = path.resolve(cwd, validProjectName)
   fs.mkdirSync(projectPath, { recursive: true })
   if (includeGit) {
     fs.mkdirSync(path.resolve(projectPath, '.git'), { recursive: true })
   }
   const pkgContent = {
-    name: projectName,
+    name: validProjectName,
     version: '0.0.0',
     description: '',
     license: 'MIT',

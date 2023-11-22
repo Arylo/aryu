@@ -15,7 +15,7 @@ const copyFiles = (sourceDir: string, targetDir: string) => {
       const stat = fs.statSync(sourceStaticFilepath)
       if (stat.isFile()) {
         if (fs.existsSync(targetStaticFilepath)) {
-          logger.success(`File "${filename}" already exists.`)
+          logger.warn(`File "${filename}" already exists.`)
         } else {
           fs.copyFileSync(sourceStaticFilepath, targetStaticFilepath)
           logger.info(`File "${filename}" created.`)
@@ -50,6 +50,20 @@ export const initMethods = {
       return newObj
     })
   },
+  lint(projectDir: string) {
+    const logger = genLogger(projectDir)
+
+    logger.info('Processing the lint files initialization...')
+    copyFiles(path.resolve(STATIC_DIR, 'lint'), projectDir)
+
+    updatePkg(projectDir, (obj) => {
+      const newObj = obj
+
+      newObj.scripts ??= {}
+      newObj.scripts.test ??= 'eslint --cache --ext=.ts --ext=.js .'
+      return newObj
+    })
+  },
   test(projectDir: string) {
     const logger = genLogger(projectDir)
 
@@ -81,6 +95,7 @@ export const handler = (cwd: string) => {
     logger.info('Found the root project path')
 
     initMethods.default(projectRootDir)
+    initMethods.lint(projectRootDir)
     initMethods.test(projectRootDir)
   }
 }
