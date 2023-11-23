@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import { afterAll, beforeEach, expect, test } from 'vitest'
 import { startNodeProject } from 'tester'
 import { checkTurboFeature } from './runTurboCmd'

@@ -4,9 +4,9 @@
   ],
   "compilerOptions": {
     "allowJs": true,
+    "checkJs": true,
   },
   "include": [
-    ".eslintrc.js",
     "**/*.js",
     "**/*.ts"
   ]

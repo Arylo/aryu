@@ -33,7 +33,7 @@ export const initMethods = {
   default(projectDir: string) {
     const logger = genLogger(projectDir)
 
-    logger.info('Processing the default files initialization...')
+    logger.info('==== Processing the default files initialization...')
     copyFiles(path.resolve(STATIC_DIR, 'default'), projectDir)
 
     updatePkg(projectDir, (obj) => {
@@ -53,7 +53,7 @@ export const initMethods = {
   lint(projectDir: string) {
     const logger = genLogger(projectDir)
 
-    logger.info('Processing the lint files initialization...')
+    logger.info('==== Processing the lint files initialization...')
     copyFiles(path.resolve(STATIC_DIR, 'lint'), projectDir)
 
     updatePkg(projectDir, (obj) => {
@@ -67,7 +67,7 @@ export const initMethods = {
   test(projectDir: string) {
     const logger = genLogger(projectDir)
 
-    logger.info('Processing the test files initialization...')
+    logger.info('==== Processing the test files initialization...')
     copyFiles(path.resolve(STATIC_DIR, 'test'), projectDir)
 
     updatePkg(projectDir, (obj) => {

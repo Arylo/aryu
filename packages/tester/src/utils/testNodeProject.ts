@@ -7,7 +7,7 @@ import { execSync } from 'child_process'
 export const testNodeJSProject = (projectPath: string) => {
   expect(fs.statSync(projectPath).isDirectory()).toBeTruthy()
   const paths = ['package.json']
-    .map((p) => fs.existsSync(path.resolve(projectPath, p)))
+    .map(p => fs.existsSync(path.resolve(projectPath, p)))
   expect(paths).toEqual(Array(paths.length).fill(true))
 
   let pkg

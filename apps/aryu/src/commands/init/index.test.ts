@@ -21,9 +21,11 @@ const NODEJS_MONOREPO_FILES = ['tsconfig.json', 'tsconfig.prod.json']
 const NODEJS_TEST_FILES = ['vitest.config.ts']
 const NODEJS_LINT_FILES = ['.eslintignore', 'tsconfig.eslint.json', '.eslintrc.js']
 
-const expectFiles = (p: string, ...fileLists: string[][]) => {
-  const list = fileLists.reduce<string[]>((list, fileList) => {
-    list.push(...fileList)
+const expectFiles = (p: string, ...fileLists: Array<string|string[]>) => {
+  const list = fileLists.reduce<string[]>((list, filenameOrFilenames) => {
+    const filenames = (Array.isArray(filenameOrFilenames) ? filenameOrFilenames : [filenameOrFilenames])
+      .filter(name => typeof name === 'string')
+    list.push(...filenames)
     return list
   }, [])
   list.forEach((filename) => {
@@ -35,6 +37,7 @@ test('should init project', () => {
   handler(testProject.getPath())
   expectFiles(
     testProject.getPath(),
+    '.git',
     PROJECT_DEFAULT_FILES,
     NODEJS_VERSION_FILES,
     NODEJS_TYPESCRIPT_FILES,

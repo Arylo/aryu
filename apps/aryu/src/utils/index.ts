@@ -1,4 +1,6 @@
 export { default as findUp } from './findUp'
+export { default as findNpmProgram } from './findNpmProgram'
+export type * from './findNpmProgram'
 export { default as defineCommandObject } from './defineCommandObject'
 export { default as importCommandObject } from './importCommandObject'
 export { default as defineCommand } from './defineCommand'
