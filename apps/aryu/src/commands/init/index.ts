@@ -41,8 +41,6 @@ export const initMethods = {
 
       newObj.scripts ??= {}
       newObj.scripts.build ??= 'turbo build'
-      newObj.scripts.pretest ??= 'npm run build'
-      newObj.scripts.test ??= 'vitest run --coverage'
       newObj.workspaces ??= [
         'apps/*',
         'packages/*',
@@ -60,7 +58,10 @@ export const initMethods = {
       const newObj = obj
 
       newObj.scripts ??= {}
-      newObj.scripts.test ??= 'eslint --cache --ext=.ts --ext=.js .'
+      if (newObj.scripts.build) {
+        newObj.scripts.prelint ??= 'npm run build'
+      }
+      newObj.scripts.lint ??= 'eslint --cache --ext=.ts --ext=.js .'
       return newObj
     })
   },
@@ -83,9 +84,9 @@ export const initMethods = {
   },
 }
 
-export const handler = (cwd: string) => {
-  const projectRootDir = getRootProjectPath({ cwd })
-  const projectDir = getProjectPath({ cwd })
+export const handler = () => {
+  const projectRootDir = getRootProjectPath()
+  const projectDir = getProjectPath()
 
   if (projectDir !== projectRootDir) {
     copyFiles(path.resolve(STATIC_DIR, 'package'), projectDir)
@@ -102,6 +103,6 @@ export const handler = (cwd: string) => {
 
 export default defineCommandObject({
   description: 'Project folder initialize',
-  execute: () => handler(process.cwd()),
+  execute: () => handler(),
 })
 

@@ -3,16 +3,12 @@ import path from 'path'
 import { getProjectPath } from './getProjectPath'
 import { getRootProjectPath } from './getRootProjectPath'
 
-export interface FindNpmProgramOptions {
-  cwd: string
-}
-
-export default function findNpmProgram(name: string, { cwd }: Partial<FindNpmProgramOptions> = {}) {
-  const projectRootDir = getRootProjectPath({ cwd })
-  const projectDir = getProjectPath({ cwd })
+export default function findNpmProgram(name: string) {
+  const projectRootDir = getRootProjectPath()
+  const projectDir = getProjectPath()
   const programPaths = [
-    path.resolve(projectDir, './node_modules/.bin/tsc'),
-    path.resolve(projectRootDir, './node_modules/.bin/tsc'),
+    path.resolve(projectDir, './node_modules/.bin', name),
+    path.resolve(projectRootDir, './node_modules/.bin', name),
   ].filter(p => fs.existsSync(p))
   if (programPaths.length === 0) return false
   return programPaths[0]

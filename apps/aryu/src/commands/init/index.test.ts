@@ -3,6 +3,7 @@ import path from 'path'
 import { afterAll, beforeEach, expect, test } from 'vitest'
 import { startNodeProject } from 'tester'
 import { handler } from '../init'
+import { storeRun } from '../../store'
 
 const testProject = startNodeProject()
 
@@ -34,7 +35,9 @@ const expectFiles = (p: string, ...fileLists: Array<string|string[]>) => {
 }
 
 test('should init project', () => {
-  handler(testProject.getPath())
+  storeRun(() => {
+    handler()
+  }, { cwd: testProject.getPath() })
   expectFiles(
     testProject.getPath(),
     '.git',
@@ -49,7 +52,9 @@ test('should init project', () => {
 
 test('should init project still success even it has same name file', () => {
   testProject.addFile('.nvmrc', '16')
-  handler(testProject.getPath())
+  storeRun(() => {
+    handler()
+  }, { cwd: testProject.getPath() })
   expectFiles(
     testProject.getPath(),
     PROJECT_DEFAULT_FILES,
@@ -63,7 +68,9 @@ test('should init project still success even it has same name file', () => {
 
 test('should init project under the subfolder', () => {
   const subfolderPath = testProject.addDirectory('newFolder')
-  handler(subfolderPath)
+  storeRun(() => {
+    handler()
+  }, { cwd: subfolderPath })
   expectFiles(
     testProject.getPath(),
     PROJECT_DEFAULT_FILES,

@@ -1,6 +1,7 @@
 import { afterAll, beforeEach, expect, test } from 'vitest'
 import { startNodeProject } from 'tester'
 import { getTscPath } from './getTscPath'
+import { storeRun } from '../../../../store'
 
 const testProject = startNodeProject()
 
@@ -14,9 +15,13 @@ afterAll(() => {
 
 test('should found the tsc progress', () => {
   testProject.addFile('node_modules/.bin/tsc')
-  expect(getTscPath({ cwd: testProject.getPath() })).toEqual('node_modules/.bin/tsc')
+  storeRun(() => {
+    expect(getTscPath()).toEqual('node_modules/.bin/tsc')
+  }, { cwd: testProject.getPath() })
 })
 
 test('should non-found the tsc progress', () => {
-  expect(getTscPath({ cwd: testProject.getPath() })).toBeFalsy()
+  storeRun(() => {
+    expect(getTscPath()).toBeFalsy()
+  }, { cwd: testProject.getPath() })
 })

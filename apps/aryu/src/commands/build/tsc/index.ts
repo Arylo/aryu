@@ -1,14 +1,12 @@
-import { defineCommandObject, exec, genLogger, getProjectPath } from '../../../utils'
+import { defineCommandObject, exec, getProjectPath } from '../../../utils'
 import { getTscPath } from './utils/getTscPath'
-import { genTscArgs } from './utils/getTscArgs'
+import { getTscArgs } from './utils/getTscArgs'
 
 export const handler = (argv: any[] = []) => {
   const projectRoot = getProjectPath()
-  const logger = genLogger(projectRoot)
 
-  const command = `${getTscPath()} ${genTscArgs().join(' ')} ${argv.join(' ')}`
-  logger.command(command)
-  exec(command, { stdio: 'inherit', cwd: projectRoot })
+  const command = `${getTscPath()} ${getTscArgs(argv).join(' ')}`
+  exec.log(command).run(undefined, { cwd: projectRoot })
 }
 
 export default defineCommandObject({

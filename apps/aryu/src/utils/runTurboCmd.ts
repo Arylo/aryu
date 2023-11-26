@@ -30,7 +30,6 @@ export const runTurboCmd = (cmd: string, argv: string[] = []) => {
     return false
   }
   const command = `turbo run ${cmd} ${argv.join(' ')}`
-  logger.command(command)
-  exec(command)
+  exec.log(command).run()
   process.exit(0)
 }

@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { getProjectPath, getRootProjectPath } from '../../../../utils'
 
-export const genTscArgs = () => {
+export const getTscArgs = (argv: any[] = []) => {
   const projectRootDir = getRootProjectPath()
   const projectDir = getProjectPath()
   const tsconfigPaths = [
@@ -12,12 +12,13 @@ export const genTscArgs = () => {
     path.resolve(projectRootDir, 'tsconfig.json'),
   ].filter(p => fs.existsSync(p))
 
-  const tsconfigPath = path.relative(projectDir, tsconfigPaths[0])
+  const tsconfigPath = tsconfigPaths[0]
 
   const args = [
-    `-p ${tsconfigPath}`,
+    tsconfigPath && `-p ${path.relative(projectDir, tsconfigPath)}`,
     '--rootDir ./src',
     '--outDir ./dist',
-  ]
+    ...argv,
+  ].filter(Boolean)
   return args
 }

@@ -1,8 +1,8 @@
-import fs from 'fs'
 import path from 'path'
 import { afterAll, beforeEach, expect, test } from 'vitest'
 import { startNodeProject } from 'tester'
 import findNpmProgram from './findNpmProgram'
+import { storeRun } from '../store'
 
 const testProject = startNodeProject()
 
@@ -16,32 +16,43 @@ afterAll(() => {
 
 test('should found the tsc program', () => {
   testProject.addFile('node_modules/.bin/tsc')
-  expect(findNpmProgram('tsc', { cwd: testProject.getPath() }))
-    .toEqual(path.resolve(testProject.getPath(), 'node_modules/.bin/tsc'))
+  storeRun(() => {
+    expect(findNpmProgram('tsc'))
+      .toEqual(path.resolve(testProject.getPath(), 'node_modules/.bin/tsc'))
+  }, { cwd: testProject.getPath() })
 })
 
 test('should non-found the tsc program', () => {
-  expect(findNpmProgram('tsc', { cwd: testProject.getPath() })).toBeFalsy()
+  storeRun(() => {
+    expect(findNpmProgram('tsc'))
+      .toBeFalsy()
+  }, { cwd: testProject.getPath() })
 })
 
 test('should found the tsc program under sub-project', () => {
   testProject.addFile('node_modules/.bin/tsc')
-  const subProject = testProject.startSubNodeProject('test')
-  expect(findNpmProgram('tsc', { cwd: subProject.getPath() }))
-    .toEqual(path.resolve(testProject.getPath(), 'node_modules/.bin/tsc'))
+  const subProject = testProject.startSubNodeProject()
+  storeRun(() => {
+    expect(findNpmProgram('tsc'))
+      .toEqual(path.resolve(testProject.getPath(), 'node_modules/.bin/tsc'))
+  }, { cwd: subProject.getPath() })
 })
 
 test('should prioritize found the tsc program under sub-project', () => {
   testProject.addFile('node_modules/.bin/tsc')
-  const subProject = testProject.startSubNodeProject('test')
+  const subProject = testProject.startSubNodeProject()
   subProject.addFile('node_modules/.bin/tsc')
-  expect(findNpmProgram('tsc', { cwd: subProject.getPath() }))
-    .toEqual(path.resolve(subProject.getPath(), 'node_modules/.bin/tsc'))
+  storeRun(() => {
+    expect(findNpmProgram('tsc'))
+      .toEqual(path.resolve(subProject.getPath(), 'node_modules/.bin/tsc'))
+  }, { cwd: subProject.getPath() })
 })
 
 test('should found the tsc program from sub-project', () => {
-  const subProject = testProject.startSubNodeProject('test')
+  const subProject = testProject.startSubNodeProject()
   subProject.addFile('node_modules/.bin/tsc')
-  expect(findNpmProgram('tsc', { cwd: subProject.getPath() }))
-    .toEqual(path.resolve(subProject.getPath(), 'node_modules/.bin/tsc'))
+  storeRun(() => {
+    expect(findNpmProgram('tsc'))
+      .toEqual(path.resolve(subProject.getPath(), 'node_modules/.bin/tsc'))
+  }, { cwd: subProject.getPath() })
 })

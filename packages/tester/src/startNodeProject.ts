@@ -1,8 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import { createNodeProject } from './createNodeProject'
 import { execSync } from 'child_process'
+import { faker } from '@faker-js/faker'
+import { createNodeProject } from './createNodeProject'
 
 interface IGenNodeProjectOptions {
   projectName: string,
@@ -33,14 +34,14 @@ function genNodeProject(cwd: string, { projectName }: Partial<IGenNodeProjectOpt
     fs.writeFileSync(filePath, content, 'utf-8')
     return filePath
   }
-  function installModule (moduleName: string, devDependency = false) {
+  function installModule(moduleName: string, devDependency = false) {
     return installModule.npm(moduleName, devDependency)
   }
   installModule.npm = (moduleName: string, devDependency = false) => {
     const command = [
       'npm install',
       devDependency ? '-D' : '-S',
-      moduleName
+      moduleName,
     ].filter(Boolean)
     return execSync(command.join(' '), { encoding: 'utf-8', cwd: projectPath })
   }
@@ -56,7 +57,7 @@ function genNodeProject(cwd: string, { projectName }: Partial<IGenNodeProjectOpt
 
 export function startNodeProject(cwd = os.tmpdir()) {
   const project = genNodeProject(cwd)
-  const startSubNodeProject = (name: string, { subDir = SubDir.APP } = { }) => {
+  const startSubNodeProject = (name = faker.word.sample(), { subDir = SubDir.APP } = { }) => {
     const p = genNodeProject(path.resolve(project.getPath(), subDir), { projectName: name })
     p.refresh()
     return {

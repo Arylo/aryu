@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { defineCommandObject, exec, genLogger, getProjectPath } from '../../utils'
+import { defineCommandObject, exec, getProjectPath } from '../../utils'
 import { STATIC_DIR } from './constant'
 
 const LINT_SETTING_CONFIG = path.resolve(STATIC_DIR, '.eslintrc')
@@ -19,8 +19,8 @@ const genLintArgs = () => [
   '--ext=.ts',
 ]
 
-export const handler = (projectPath: string, argv: string[] = []) => {
-  const logger = genLogger(projectPath);
+export const handler = (argv: string[] = []) => {
+  const projectPath = getProjectPath();
 
   ([
     ['config', path.resolve(projectPath, '.eslintrc')],
@@ -32,16 +32,14 @@ export const handler = (projectPath: string, argv: string[] = []) => {
   const logCommand = realCommand
     .replace(LINT_SETTING_CONFIG, '@aryu/eslint/.eslintrc')
     .replace(LINT_SETTING_IGNORE, '@aryu/eslint/.eslintignore')
-  logger.command(logCommand)
 
-  exec(realCommand)
+  exec.log(logCommand).run(realCommand)
 }
 
 export default defineCommandObject({
   description: 'Code standard using eslint',
-  execute: (argv: string[] = []) => {
-    const projectRoot = getProjectPath()
-    return handler(projectRoot, argv)
+  execute(argv: string[] = []) {
+    return handler(argv)
   },
 })
 
