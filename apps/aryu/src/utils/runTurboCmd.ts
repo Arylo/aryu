@@ -3,6 +3,7 @@ import path from 'path'
 import { getProjectPath } from './getProjectPath'
 import { genLogger } from './logger'
 import { exec } from './exec'
+import { findNpmProgram } from './npm'
 
 export const checkTurboFeature = (projectPath: string) => {
   const logger = genLogger(projectPath)
@@ -16,7 +17,8 @@ export const checkTurboFeature = (projectPath: string) => {
 export const runTurboCmd = (cmd: string, argv: string[] = []) => {
   const projectPath = getProjectPath()
   const turboConfigPath = checkTurboFeature(projectPath)
-  if (!turboConfigPath) return false
+  const turbo = findNpmProgram('turbo')
+  if (!turboConfigPath || !turbo) return false
   const logger = genLogger(projectPath)
 
   let config: { pipeline: { [cmd: string]: any } } = { pipeline: {} }

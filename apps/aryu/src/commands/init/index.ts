@@ -1,9 +1,8 @@
 import fs from 'fs'
 import path from 'path'
-import { defineCommandObject, genLogger, getProjectPath } from '../../utils'
+import { defineCommandObject, genLogger, getProjectPath, npm } from '../../utils'
 import { STATIC_DIR } from './constant'
 import { getRootProjectPath } from '../../utils/getRootProjectPath'
-import { updatePkg } from './utils'
 
 const copyFiles = (sourceDir: string, targetDir: string) => {
   const logger = genLogger(targetDir)
@@ -36,17 +35,12 @@ export const initMethods = {
     logger.info('==== Processing the default files initialization...')
     copyFiles(path.resolve(STATIC_DIR, 'default'), projectDir)
 
-    updatePkg(projectDir, (obj) => {
-      const newObj = obj
-
-      newObj.scripts ??= {}
-      newObj.scripts.build ??= 'turbo build'
-      newObj.workspaces ??= [
-        'apps/*',
-        'packages/*',
-      ]
-      return newObj
-    })
+    const curModule = npm.getModule(projectDir)
+    curModule.setScript('build', 'turbo build')
+    curModule.addWorkSpace(
+      'apps/*',
+      'packages/*',
+    )
   },
   lint(projectDir: string) {
     const logger = genLogger(projectDir)
@@ -54,16 +48,11 @@ export const initMethods = {
     logger.info('==== Processing the lint files initialization...')
     copyFiles(path.resolve(STATIC_DIR, 'lint'), projectDir)
 
-    updatePkg(projectDir, (obj) => {
-      const newObj = obj
-
-      newObj.scripts ??= {}
-      if (newObj.scripts.build) {
-        newObj.scripts.prelint ??= 'npm run build'
-      }
-      newObj.scripts.lint ??= 'eslint --cache --ext=.ts --ext=.js .'
-      return newObj
-    })
+    const curModule = npm.getModule(projectDir)
+    if (curModule.hasScript('build')) {
+      curModule.setScript('prelint', 'npm run build')
+    }
+    curModule.setScript('lint', 'aryu lint')
   },
   test(projectDir: string) {
     const logger = genLogger(projectDir)
@@ -71,16 +60,11 @@ export const initMethods = {
     logger.info('==== Processing the test files initialization...')
     copyFiles(path.resolve(STATIC_DIR, 'test'), projectDir)
 
-    updatePkg(projectDir, (obj) => {
-      const newObj = obj
-
-      newObj.scripts ??= {}
-      if (newObj.scripts.build) {
-        newObj.scripts.pretest ??= 'npm run build'
-      }
-      newObj.scripts.test ??= 'vitest run --coverage'
-      return newObj
-    })
+    const curModule = npm.getModule(projectDir)
+    if (curModule.hasScript('build')) {
+      curModule.setScript('pretest', 'npm run build')
+    }
+    curModule.setScript('test', 'aryu test')
   },
 }
 
@@ -99,10 +83,12 @@ export const handler = () => {
     initMethods.lint(projectRootDir)
     initMethods.test(projectRootDir)
   }
+
+  const curModule = npm.getModule(projectDir)
+  curModule.save()
 }
 
 export default defineCommandObject({
   description: 'Project folder initialize',
   execute: () => handler(),
 })
-

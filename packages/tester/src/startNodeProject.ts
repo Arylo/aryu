@@ -1,9 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
-import { execSync } from 'child_process'
+import { ExecSyncOptionsWithStringEncoding, execSync } from 'child_process'
 import { faker } from '@faker-js/faker'
 import { createNodeProject } from './createNodeProject'
+
+const DEFAULT_ENCODING = 'utf-8'
 
 interface IGenNodeProjectOptions {
   projectName: string,
@@ -31,7 +33,7 @@ function genNodeProject(cwd: string, { projectName }: Partial<IGenNodeProjectOpt
   const addFile = (name: string, content = '') => {
     const filePath = path.resolve(projectPath, name)
     fs.mkdirSync(path.dirname(filePath), { recursive: true })
-    fs.writeFileSync(filePath, content, 'utf-8')
+    fs.writeFileSync(filePath, content, DEFAULT_ENCODING)
     return filePath
   }
   function installModule(moduleName: string, devDependency = false) {
@@ -40,10 +42,14 @@ function genNodeProject(cwd: string, { projectName }: Partial<IGenNodeProjectOpt
   installModule.npm = (moduleName: string, devDependency = false) => {
     const command = [
       'npm install',
+      '--prefer-offline',
       devDependency ? '-D' : '-S',
       moduleName,
     ].filter(Boolean)
-    return execSync(command.join(' '), { encoding: 'utf-8', cwd: projectPath })
+    return execSync(command.join(' '), { encoding: DEFAULT_ENCODING, cwd: projectPath })
+  }
+  function exec(command: string, options?: ExecSyncOptionsWithStringEncoding) {
+    return execSync(command, Object.assign({}, { encoding: DEFAULT_ENCODING, cwd: projectPath }, options))
   }
   return {
     getPath: () => projectPath,
@@ -52,6 +58,7 @@ function genNodeProject(cwd: string, { projectName }: Partial<IGenNodeProjectOpt
     addDirectory,
     addFile,
     installModule,
+    exec,
   }
 }
 

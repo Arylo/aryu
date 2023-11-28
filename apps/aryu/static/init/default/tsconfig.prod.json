@@ -2,4 +2,7 @@
   "extends": [
     "@aryu/tsconfig/tsconfig.prod",
   ],
+  "exclude": [
+    "vitest.config.ts"
+  ]
 }
